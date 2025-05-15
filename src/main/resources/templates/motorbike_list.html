@@ -1,0 +1,1071 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dịch Vụ Cho Thuê Xe Máy | BikeRental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2e86de;
+            --primary-dark: #1c6bc8;
+            --secondary: #ff6b6b;
+            --secondary-dark: #ee5253;
+            --accent: #54a0ff;
+            --dark: #2c3e50;
+            --light: #f9f9f9;
+            --gray: #95a5a6;
+            --success: #10ac84;
+            --success-dark: #0a8c6a;
+        }
+
+        body {
+            background-color: var(--light);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Header Styles */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            color: var(--dark);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            padding: 0.7rem 2rem;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+            position: relative;
+        }
+
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .nav-links a:not(:has(button))::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/banner.webp');
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 2rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-btn {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-btn:hover {
+            background-color: transparent;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            position: relative;
+            font-size: 2rem;
+            color: var(--dark);
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+            position: relative;
+            top: -70px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .filter-title {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            text-align: center;
+            position: relative;
+            display: inline-block;
+        }
+
+        .filter-title:after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 2px;
+            background-color: var(--primary);
+            bottom: -5px;
+            left: 0;
+        }
+
+        .filter-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background-color: #f8f9fa;
+        }
+
+        .form-group select:focus, .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(46, 134, 222, 0.2);
+            outline: none;
+        }
+
+        .search-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(46, 134, 222, 0.3);
+            margin-top: 1.5rem;
+            width: 100%;
+        }
+
+        .search-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(46, 134, 222, 0.4);
+        }
+
+        /* Bike Listings */
+        .bikes-section {
+            padding: 2rem 0;
+        }
+
+        .bike-listings {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .bike-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .bike-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .bike-image-container {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .bike-image {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .bike-card:hover .bike-image {
+            transform: scale(1.05);
+        }
+
+        .bike-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .bike-details {
+            padding: 1.8rem;
+        }
+
+        .bike-name {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 700;
+        }
+
+        .bike-type {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .bike-type i {
+            margin-right: 5px;
+            color: var(--primary);
+        }
+
+        .bike-rating {
+            margin-bottom: 1rem;
+            color: #f1c40f;
+        }
+
+        .bike-features {
+            display: flex;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .feature {
+            background-color: #f8f9fa;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            margin-right: 0.7rem;
+            margin-bottom: 0.7rem;
+            font-size: 0.85rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature i {
+            margin-right: 5px;
+            color: var(--primary);
+            font-size: 0.8rem;
+        }
+
+        .bike-price span:first-of-type, .bike-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            /*display: ;*/
+            align-items: center;
+        }
+
+        .bike-price span {
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-weight: normal;
+            margin-left: 5px;
+        }
+
+        .bike-price i {
+            margin-right: 8px;
+            color: var(--secondary-dark);
+        }
+
+        .rent-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--success);
+            color: white;
+            text-align: center;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(16, 172, 132, 0.3);
+        }
+
+        .rent-btn:hover {
+            background-color: var(--success-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(16, 172, 132, 0.4);
+        }
+
+        /* Why Choose Us Section */
+        .why-us {
+            background-color: white;
+            padding: 4rem 0;
+            margin: 3rem 0;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .features-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .feature-box {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 10px;
+            transition: all 0.3s;
+            background-color: var(--light);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            background-color: rgba(46, 134, 222, 0.1);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .feature-text {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 4rem 0;
+            background-color: #f8f9fa;
+        }
+
+        .testimonial-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .testimonial-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .testimonial-card:before {
+            content: '\201C';
+            font-size: 5rem;
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            color: rgba(46, 134, 222, 0.1);
+            font-family: Georgia, serif;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .author-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+            border: 3px solid var(--primary);
+        }
+
+        .author-info h4 {
+            margin-bottom: 0.3rem;
+            color: var(--dark);
+        }
+
+        .author-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            padding: 0 1rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            position: relative;
+            padding-bottom: 0.8rem;
+        }
+
+        .footer-section h3:after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary);
+            bottom: 0;
+            left: 0;
+        }
+
+        .footer-about p {
+            margin-bottom: 1.5rem;
+            color: #bdc3c7;
+            line-height: 1.8;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-links a i {
+            margin-right: 8px;
+            font-size: 0.8rem;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .contact-info li {
+            margin-bottom: 1rem;
+            color: #bdc3c7;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .contact-info i {
+            margin-right: 10px;
+            color: var(--primary);
+            margin-top: 5px;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #34495e;
+            color: #bdc3c7;
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 999;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-links {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+
+            .nav-links li {
+                margin: 0 0.7rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .filter-form {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                top: -50px;
+            }
+
+            .section-title {
+                font-size: 1.7rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                height: 400px;
+            }
+
+            .hero-content {
+                padding: 0 1rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .feature-box {
+                padding: 1.5rem;
+            }
+        }
+
+        /* CSS cho nút đăng nhập */
+        .login-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #f97316; /* Màu cam */
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .login-button:hover {
+            background-color: #ea580c; /* Màu cam đậm hơn khi hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .login-button:active {
+            background-color: #c2410c; /* Màu cam đậm hơn nữa khi click */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            transform: translateY(1px);
+        }
+
+        /* Thêm icon vào nút (tùy chọn) */
+        .login-button::before {
+            content: "🔑 "; /* Icon chìa khóa */
+            margin-right: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-motorcycle"></i>
+                BikeRental
+            </div>
+            <ul class="nav-links">
+                <li><a href="#">Trang Chủ</a></li>
+                <li><a href="#">Xe Máy</a></li>
+                <li><a href="#">Dịch Vụ</a></li>
+                <li><a href="#">Về Chúng Tôi</a></li>
+                <li><a href="#">Liên Hệ</a></li>
+                <a href="/login">
+                    <button class="login-button">Đăng nhập</button>
+                </a>
+            </ul>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Trải Nghiệm Tự Do Trên Mọi Cung Đường</h1>
+            <p>Dịch vụ cho thuê xe máy chất lượng cao với giá cả hợp lý, đa dạng mẫu mã và dịch vụ tận tâm</p>
+            <a href="#bikes" class="hero-btn">Khám Phá Ngay</a>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="filter-section">
+            <h2 class="filter-title">Tìm Xe Máy Phù Hợp</h2>
+            <div class="filter-form">
+                <div class="form-group">
+                    <label for="bike-type"><i class="fas fa-motorcycle"></i> Loại Xe</label>
+                    <select id="bike-type">
+                        <option value="">Tất cả loại xe</option>
+                        <option value="scooter">Xe Tay Ga</option>
+                        <option value="manual">Xe Số</option>
+                        <option value="sport">Xe Thể Thao</option>
+                        <option value="touring">Xe Phượt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="brand"><i class="fas fa-tag"></i> Hãng Xe</label>
+                    <select id="brand">
+                        <option value="">Tất cả hãng xe</option>
+                        <option value="honda">Honda</option>
+                        <option value="yamaha">Yamaha</option>
+                        <option value="suzuki">Suzuki</option>
+                        <option value="piaggio">Piaggio</option>
+                        <option value="sym">SYM</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cc"><i class="fas fa-tachometer-alt"></i> Phân Khối</label>
+                    <select id="cc">
+                        <option value="">Tất cả phân khối</option>
+                        <option value="50">Dưới 50cc</option>
+                        <option value="125">50cc - 125cc</option>
+                        <option value="150">125cc - 150cc</option>
+                        <option value="250">150cc - 250cc</option>
+                        <option value="500">Trên 250cc</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="price"><i class="fas fa-money-bill-wave"></i> Giá Tối Đa</label>
+                    <select id="price">
+                        <option value="">Tất cả mức giá</option>
+                        <option value="100">Dưới 100.000đ/ngày</option>
+                        <option value="200">Dưới 200.000đ/ngày</option>
+                        <option value="300">Dưới 300.000đ/ngày</option>
+                        <option value="500">Dưới 500.000đ/ngày</option>
+                    </select>
+                </div>
+                <button class="search-btn"><i class="fas fa-search"></i> Tìm Kiếm</button>
+            </div>
+        </section>
+    </div>
+
+    <section class="bikes-section" id="bikes">
+        <div class="container">
+            <h2 class="section-title">Xe Máy Nổi Bật</h2>
+            <div class="bike-listings">
+
+                <div th:each="bike : ${motorbikes}" class="bike-card">
+                    <div class="bike-image-container">
+                        <span class="bike-tag">Phổ biến</span>
+                        <img th:src="@{${bike.imageUrl}}" th:alt="${bike.name}" class="bike-image" />
+                    </div>
+
+                    <div class="bike-details">
+                        <h3 class="bike-name" th:text="${bike.name}">Honda Vision</h3>
+                        <p class="bike-type">
+                            <i class="fas fa-info-circle"></i> <span th:text="${bike.type}">Xe Tay Ga | 110cc</span>
+                        </p>
+
+                        <!-- rating -->
+                        <div class="bike-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span style="color: #555; margin-left: 5px;">(5/5)</span>
+                        </div>
+
+                        <!-- features -->
+                        <div class="bike-features">
+                            <span class="feature"><i class="fas fa-bolt"></i> Tốc độ</span>
+                            <span class="feature"><i class="fas fa-gas-pump"></i> Tiết kiệm xăng</span>
+                        </div>
+
+                        <p class="bike-price">
+                            <i class="fas fa-tag"></i> <span th:text="${bike.formatPricePerDay()}">120.000đ</span> <span>/ ngày</span>
+                        </p>
+
+                        <a th:href="@{/rent/form(bikeId=${bike.id})}" class="rent-btn">
+                            <i class="fas fa-shopping-cart"></i> Đặt Xe Ngay
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="why-us">
+        <h2 class="section-title">Tại Sao Chọn Chúng Tôi</h2>
+        <div class="features-container">
+            <div class="feature-box">
+                <div class="feature-icon">
+                    <i class="fas fa-motorcycle"></i>
+                </div>
+                <h3 class="feature-title">Đa Dạng Mẫu Mã</h3>
+                <p class="feature-text">Chúng tôi cung cấp nhiều loại xe máy khác nhau, từ xe số đến xe tay ga, xe thể thao, phù hợp với mọi nhu cầu của bạn.</p>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <h3 class="feature-title">Giá Cả Hợp Lý</h3>
+                <p class="feature-text">Cam kết giá thuê xe tốt nhất trên thị trường với nhiều gói ưu đãi hấp dẫn cho khách hàng thân thiết.</p>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3 class="feature-title">Hỗ Trợ 24/7</h3>
+                <p class="feature-text">Đội ngũ nhân viên luôn sẵn sàng hỗ trợ bạn mọi lúc, mọi nơi khi có sự cố xảy ra trong quá trình thuê xe.</p>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title">An Toàn & Bảo Hiểm</h3>
+                <p class="feature-text">Tất cả xe đều được bảo dưỡng định kỳ và có bảo hiểm đầy đủ, đảm bảo an toàn cho chuyến đi của bạn.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">Khách Hàng Nói Gì Về Chúng Tôi</h2>
+            <div class="testimonial-container">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">Dịch vụ thuê xe máy tuyệt vời! Xe mới, sạch sẽ và hoạt động tốt. Nhân viên rất thân thiện và hỗ trợ nhiệt tình. Tôi sẽ quay lại vào lần sau!</p>
+                    <div class="testimonial-author">
+                        <img src="https://via.placeholder.com/100x100?text=Nguyen+Van+A" alt="Nguyễn Văn A" class="author-image">
+                        <div class="author-info">
+                            <h4>Nguyễn Văn A</h4>
+                            <p>Khách hàng thường xuyên</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">Giá cả hợp lý, thủ tục đơn giản và nhanh chóng. Tôi đã thuê Honda SH cho chuyến du lịch Đà Nẵng và rất hài lòng với trải nghiệm này.</p>
+                    <div class="testimonial-author">
+                        <img src="https://via.placeholder.com/100x100?text=Tran+Thi+B" alt="Trần Thị B" class="author-image">
+                        <div class="author-info">
+                            <h4>Trần Thị B</h4>
+                            <p>Du khách từ Hà Nội</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section footer-about">
+                <h3>Về BikeRental</h3>
+                <p>BikeRental cung cấp dịch vụ cho thuê xe máy chất lượng cao với giá cả hợp lý. Chúng tôi cam kết mang đến trải nghiệm thuê xe tốt nhất cho khách hàng.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Liên Kết Nhanh</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Trang Chủ</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Xe Máy Cho Thuê</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Dịch Vụ</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Điều Khoản</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Chính Sách Bảo Mật</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Liên Hệ</h3>
+                <ul class="contact-info footer-links">
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Văn Thoại, Đà Nẵng</li>
+                    <li><i class="fas fa-phone-alt"></i> 0123 456 789</li>
+                    <li><i class="fas fa-envelope"></i> info@bikerental.com</li>
+                    <li><i class="fas fa-clock"></i> Mở cửa: 7:00 - 21:00 (Hàng ngày)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 BikeRental. Tất cả quyền được bảo lưu.
+        </div>
+    </footer>
+
+    <a href="#" class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></a>
+
+    <script>
+        // Sticky header
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            const backToTop = document.getElementById('backToTop');
+
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+                backToTop.classList.add('show');
+            } else {
+                header.classList.remove('scrolled');
+                backToTop.classList.remove('show');
+            }
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        document.getElementById("backToTop").addEventListener("click", function (e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    </script>
+</body>
+</html>

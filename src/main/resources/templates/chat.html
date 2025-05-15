@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+
+<input id="from" placeholder="Tên bạn">
+<input id="content" placeholder="Nội dung">
+<button onclick="sendMessage()">Gửi</button>
+<ul id="messages"></ul>
+
+<script>
+  const socket = new SockJS('/chat');
+  const stompClient = Stomp.over(socket);
+
+  stompClient.connect({}, () => {
+    stompClient.subscribe('/topic/messages', message => {
+      const msg = JSON.parse(message.body);
+      document.getElementById('messages').innerHTML += `<li><b>${msg.from}:</b> ${msg.content}</li>`;
+    });
+  });
+
+  function sendMessage() {
+    const from = document.getElementById('from').value;
+    const content = document.getElementById('content').value;
+    stompClient.send("/app/chat/send", {}, JSON.stringify({ from, content }));
+  }
+</script>
+</body>
+</html>

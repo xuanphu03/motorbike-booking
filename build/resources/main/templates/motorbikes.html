@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Xe Máy Cho Thuê | BikeRental Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <style>
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --primary-light: #e3f2fd;
+            --secondary: #e74c3c;
+            --secondary-dark: #c0392b;
+            --accent: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --gray: #95a5a6;
+            --success: #2ecc71;
+            --success-dark: #27ae60;
+            --warning: #f1c40f;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: #f5f9fc;
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--dark);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .sidebar-logo i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        .sidebar-menu {
+            padding: 1.5rem 0;
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left-color: var(--primary);
+        }
+
+        .sidebar-menu i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+            transition: var(--transition);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background-color: white;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 0.6rem 1rem 0.6rem 2.5rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            width: 250px;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            width: 300px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            color: var(--dark);
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.blue {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .stat-icon.green {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success);
+        }
+
+        .stat-icon.orange {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: var(--accent);
+        }
+
+        .stat-icon.red {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Card */
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .card-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .card-btn i {
+            margin-right: 5px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #e0e0e0;
+            color: var(--dark);
+        }
+
+        .btn-outline:hover {
+            background-color: #f5f5f5;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .table th, .table td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .table-image {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--border-radius);
+            object-fit: cover;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 50px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-ga {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-so {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-con {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status-confirmed {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success);
+        }
+
+        .status-pending {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: var(--accent);
+        }
+
+        .status-cancelled {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+        .actions-cell {
+            display: flex;
+            height: 100%;
+            gap: 0.5rem;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .action-btn {
+            padding: 0.4rem 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 0.85rem;
+        }
+
+        .btn-confirm {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-confirm:hover {
+            background-color: var(--success-dark);
+        }
+
+        .btn-view {
+            background-color: var(--info);
+            color: white;
+        }
+
+        .btn-view:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-cancel {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background-color: var(--secondary-dark);
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            background-color: white;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-text {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+
+        .form-error {
+            font-size: 0.8rem;
+            color: var(--danger);
+            margin-top: 0.25rem;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #e0e0e0;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            font-size: 0.9rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .image-preview {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .image-preview img {
+            width: 100%;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .image-preview .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--danger);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .image-preview .remove-btn:hover {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 0.8rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--gray);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .tab:hover {
+            color: var(--primary);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .pagination-list {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+        }
+
+        .pagination-item a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: var(--transition);
+            border: 1px solid #e0e0e0;
+        }
+
+        .pagination-item a:hover {
+            background-color: #f5f5f5;
+        }
+
+        .pagination-item.active a {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                overflow: visible;
+            }
+
+            .sidebar-header {
+                padding: 1rem;
+                justify-content: center;
+            }
+
+            .sidebar-logo span, .sidebar-menu span, .sidebar-footer {
+                display: none;
+            }
+
+            .sidebar-menu a {
+                padding: 0.8rem;
+                justify-content: center;
+            }
+
+            .sidebar-menu i {
+                margin-right: 0;
+                font-size: 1.3rem;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .search-input {
+                width: 200px;
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .card-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <a th:href="@{/}" class="sidebar-logo">
+            <i class="fas fa-motorcycle"></i>
+            <span>BikeRental</span>
+        </a>
+    </div>
+    <ul class="sidebar-menu">
+        <li>
+            <a th:href="@{/admin/orders}" th:classappend="${currentPage == 'dashboard'} ? 'active' : ''">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Tổng quan</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/admin/orders}" th:classappend="${currentPage == 'orders'} ? 'active' : ''">
+                <i class="fas fa-calendar-check"></i>
+                <span>Đơn đặt xe</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/admin/motorbikes}" th:classappend="'active'">
+                <i class="fas fa-motorcycle"></i>
+                <span>Quản lý xe</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/admin/customers}" th:classappend="${currentPage == 'customers'} ? 'active' : ''">
+                <i class="fas fa-users"></i>
+                <span>Khách hàng</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/admin/reports}" th:classappend="${currentPage == 'reports'} ? 'active' : ''">
+                <i class="fas fa-chart-line"></i>
+                <span>Báo cáo</span>
+            </a>
+        </li>
+        <li>
+            <a th:href="@{/admin/settings}" th:classappend="${currentPage == 'settings'} ? 'active' : ''">
+                <i class="fas fa-cog"></i>
+                <span>Cài đặt</span>
+            </a>
+        </li>
+    </ul>
+    <div class="sidebar-footer">
+        <div class="user-info">
+            <div class="user-avatar">
+                A
+            </div>
+            <div class="user-details">
+                <div class="user-name">Admin</div>
+                <div class="user-role">Quản lý</div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Header -->
+    <div class="header">
+        <h1 class="page-title">Quản Lý Xe Máy</h1>
+        <div class="header-actions">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Tìm kiếm xe máy...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+            <button class="notification-btn">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" th:text="${notificationCount}">3</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="fas fa-motorcycle"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value" th:text="${totalMotorcycles}">15</div>
+                <div class="stat-label">Tổng số xe máy</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value" th:text="${availableMotorcycles}">10</div>
+                <div class="stat-label">Xe sẵn sàng</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon orange">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value" th:text="${rentedMotorcycles}">3</div>
+                <div class="stat-label">Xe đang cho thuê</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon red">
+                <i class="fas fa-tools"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value" th:text="${maintenanceMotorcycles}">2</div>
+                <div class="stat-label">Xe đang bảo trì</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" data-tab="motorcycle-list">Danh Sách Xe Máy</div>
+        <div class="tab" data-tab="add-motorcycle">Thêm Xe Máy Mới</div>
+    </div>
+
+    <!-- Motorcycle List Tab -->
+    <div id="motorcycle-list" class="tab-content active">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Danh Sách Xe Máy</h2>
+                <div class="card-actions">
+                    <button class="card-btn btn-outline">
+                        <i class="fas fa-filter"></i> Lọc
+                    </button>
+                    <a th:href="@{/admin/motorcycles/export}" class="card-btn btn-outline">
+                        <i class="fas fa-download"></i> Xuất Excel
+                    </a>
+                    <button class="card-btn btn-primary" id="add-motorcycle-btn">
+                        <i class="fas fa-plus"></i> Thêm Xe Máy
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Hình Ảnh</th>
+                            <th>Tên Xe</th>
+                            <th>Loại</th>
+                            <th>Giá Thuê/Ngày</th>
+                            <th>Trạng Thái</th>
+                            <th>Thao Tác</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="motorcycle : ${motorbikes}">
+                            <td>
+                                <img th:src="${motorcycle.imageUrl}" th:alt="${motorcycle.name}" class="table-image">
+                            </td>
+                            <td th:text="${motorcycle.name}">Honda Vision</td>
+                            <td>
+                    <span class="badge"
+                          th:classappend="${motorcycle.type == 'Ga'} ? 'badge-ga' : (${motorcycle.type == 'Số'} ? 'badge-so' : 'badge-con')"
+                          th:text="${motorcycle.type}">Ga</span>
+                            </td>
+                            <td th:text="${motorcycle.formatPricePerDay()}">120,000 VNĐ</td>
+                            <td>
+                    <span class="status-badge"
+                          th:classappend="${motorcycle.status == 'Sẵn sàng'} ? 'status-confirmed' : (${motorcycle.status == 'Đang cho thuê'} ? 'status-pending' : 'status-cancelled')"
+                          th:text="${motorcycle.status }">Sẵn Sàng</span>
+                            </td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button
+                                            type="button"
+                                            class="edit-btn action-btn btn-view"
+                                            th:data-id="${motorcycle.id}"
+                                            th:data-name="${motorcycle.name}"
+                                            th:data-type="${motorcycle.type}"
+                                            th:data-price="${motorcycle.pricePerDay}"
+                                            th:data-status="${motorcycle.status}"
+                                            onclick="openEditModal(this)">
+                                        Sửa
+                                    </button>
+
+                                    <form th:action="@{/motorbikes/delete/{id}(id=${motorcycle.id})}" method="post" style="display: inline;">
+                                        <button type="submit" class="action-btn btn-cancel" onclick="return confirm('Bạn có chắc chắn muốn xóa xe này không?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="editModalOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 998;"></div>
+
+            <!-- Modal -->
+            <div id="editModal" style="
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    z-index: 999;
+    width: 90%;
+    max-width: 500px;
+    font-family: 'Segoe UI', sans-serif;
+">
+                <h2 style="margin-top: 0; margin-bottom: 16px;">Chỉnh sửa thông tin xe</h2>
+                <form action="/motorbikes/update" method="post">
+                    <input type="hidden" name="id" id="edit-id">
+
+                    <label for="nameField">Tên xe:</label>
+                    <input type="text" name="name" id="nameField" required style="width: 100%; padding: 8px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px;">
+
+                    <label for="typeField">Loại xe:</label>
+                    <input type="text" name="type" id="typeField" required style="width: 100%; padding: 8px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px;">
+
+                    <label for="priceField">Giá thuê mỗi ngày:</label>
+                    <input type="number" name="pricePerDay" id="priceField" required style="width: 100%; padding: 8px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px;">
+
+                    <label for="statusField">Trạng thái:</label>
+                    <select name="status" id="statusField" required style="width: 100%; padding: 8px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 6px;">
+                        <option value="Sẵn sàng">Sẵn sàng</option>
+                        <option value="Đang cho thuê">Đang cho thuê</option>
+                        <option value="Bảo trì">Bảo trì</option>
+                    </select>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                        <button type="submit" style="background: #4CAF50; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                            Cập nhật
+                        </button>
+                        <button type="button" onclick="closeEditModal()" style="background: #f44336; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                            Đóng
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="pagination" th:if="${totalPages > 1}">
+                <ul class="pagination-list">
+                    <li class="pagination-item" th:classappend="${currentPage == 1} ? 'disabled' : ''">
+                        <a th:href="@{/admin/motorcycles(page=${currentPage - 1})}" th:if="${currentPage > 1}">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                        <span th:unless="${currentPage > 1}"><i class="fas fa-chevron-left"></i></span>
+                    </li>
+                    <li class="pagination-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${i == currentPage} ? 'active' : ''">
+                        <a th:href="@{/admin/motorcycles(page=${i})}" th:text="${i}">1</a>
+                    </li>
+                    <li class="pagination-item" th:classappend="${currentPage == totalPages} ? 'disabled' : ''">
+                        <a th:href="@{/admin/motorcycles(page=${currentPage + 1})}" th:if="${currentPage < totalPages}">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        <span th:unless="${currentPage < totalPages}"><i class="fas fa-chevron-right"></i></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Motorcycle Tab -->
+    <div id="add-motorcycle" class="tab-content">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Thêm Xe Máy Mới</h2>
+            </div>
+            <div class="card-body">
+                <form id="motorcycle-form" th:action="@{/add}" th:object="${motorbikeDTO}" method="post" enctype="multipart/form-data">
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label for="name" class="form-label">Tên Xe</label>
+                            <input type="text" id="name" th:field="*{name}" class="form-control" required>
+                            <div class="form-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="type" class="form-label">Loại Xe</label>
+                            <select id="type" th:field="*{type}" class="form-control" required>
+                                <option value="" disabled selected>Chọn loại xe</option>
+                                <option value="Ga">Xe Ga</option>
+                                <option value="Số">Xe Số</option>
+                                <option value="Côn">Xe Côn</option>
+                            </select>
+                            <div class="form-error" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pricePerDay" class="form-label">Giá Cho Thuê (VNĐ/ngày)</label>
+                            <input type="text" id="pricePerDay" th:field="*{pricePerDay}" class="form-control" required>
+                            <div class="form-error" th:if="${#fields.hasErrors('pricePerDay')}" th:errors="*{pricePerDay}"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status" class="form-label">Trạng Thái</label>
+                            <select id="status" th:field="*{status}" class="form-control" required>
+                                <option value="Sẵn sàng" selected>Sẵn Sàng Cho Thuê</option>
+                                <option value="Đang cho thuê">Đang Cho Thuê</option>
+                                <option value="Bảo trì">Đang Bảo Trì</option>
+                                <option value="unavailable">Không Khả Dụng</option>
+                            </select>
+                            <div class="form-error" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="images" class="form-label">Hình Ảnh Xe</label>
+                        <input id="images" type="text" th:field="*{imageUrl}" class="form-control" placeholder="Nhập link ảnh">
+                        <div class="form-error" th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}"></div>
+                    </div>
+
+                    <div class="card-footer">
+                        <a th:href="@{/admin/motorbikes}" class="card-btn btn-outline">Hủy</a>
+                        <button type="submit" class="card-btn btn-primary">Thêm Xe Máy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+
+<!-- Success/Error Messages -->
+<div th:if="${successMessage}" id="success-message" th:data-message="${successMessage}" style="display: none;"></div>
+<div th:if="${errorMessage}" id="error-message" th:data-message="${errorMessage}" style="display: none;"></div>
+
+<script th:inline="javascript">
+    // Display success/error messages
+    document.addEventListener('DOMContentLoaded', function() {
+        const successMessage = document.getElementById('success-message');
+        const errorMessage = document.getElementById('error-message');
+
+        if (successMessage) {
+            showToast('Thành công', successMessage.getAttribute('data-message'), 'success');
+        }
+
+        if (errorMessage) {
+            showToast('Lỗi', errorMessage.getAttribute('data-message'), 'error');
+        }
+    });
+
+    // Tab switching
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.getAttribute('data-tab');
+
+            // Remove active class from all tabs and contents
+            tabs.forEach(t => t.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+
+            // Add active class to clicked tab and corresponding content
+            tab.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+
+    // Add Motorcycle button redirects to Add tab
+    document.getElementById('add-motorcycle-btn').addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+
+        document.querySelector('[data-tab="add-motorcycle"]').classList.add('active');
+        document.getElementById('add-motorcycle').classList.add('active');
+    });
+
+    // Image upload preview
+    const uploadContainer = document.getElementById('upload-container');
+    const fileInput = document.getElementById('motorcycle-image');
+    const imagePreviewContainer = document.getElementById('image-preview-container');
+    const imagePreview = document.getElementById('image-preview');
+    const removeImageButton = document.getElementById('remove-image');
+
+    uploadContainer.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                imagePreview.src = event.target.result;
+                uploadContainer.style.display = 'none';
+                imagePreviewContainer.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    removeImageButton.addEventListener('click', () => {
+        fileInput.value = '';
+        imagePreview.src = '';
+        uploadContainer.style.display = 'block';
+        imagePreviewContainer.style.display = 'none';
+    });
+
+    // Toast notification
+    function showToast(title, message, type = 'success') {
+        const toastContainer = document.getElementById('toast-container');
+
+        const toast = document.createElement('div');
+        toast.style.padding = '15px 20px';
+        toast.style.borderRadius = '4px';
+        toast.style.marginBottom = '10px';
+        toast.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+        toast.style.display = 'flex';
+        toast.style.alignItems = 'center';
+        toast.style.animation = 'fadeIn 0.3s ease-out';
+
+        if (type === 'success') {
+            toast.style.backgroundColor = '#d4edda';
+            toast.style.borderLeft = '4px solid #28a745';
+            toast.style.color = '#155724';
+        } else if (type === 'error') {
+            toast.style.backgroundColor = '#f8d7da';
+            toast.style.borderLeft = '4px solid #dc3545';
+            toast.style.color = '#721c24';
+        } else if (type === 'warning') {
+            icon.className = 'fas fa-exclamation-circle';
+        }
+
+        const content = document.createElement('div');
+
+        const titleElement = document.createElement('div');
+        titleElement.style.fontWeight = 'bold';
+        titleElement.style.marginBottom = '5px';
+        titleElement.textContent = title;
+
+        const messageElement = document.createElement('div');
+        messageElement.style.fontSize = '14px';
+        messageElement.textContent = message;
+
+        content.appendChild(titleElement);
+        content.appendChild(messageElement);
+
+        toast.appendChild(icon);
+        toast.appendChild(content);
+
+        toastContainer.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.3s ease-out';
+            setTimeout(() => {
+                toastContainer.removeChild(toast);
+            }, 300);
+        }, 3000);
+    }
+
+    function openEditModal(button) {
+        const id = button.dataset.id;
+        const name = button.dataset.name;
+        const type = button.dataset.type;
+        const price = button.dataset.price;
+        const status = button.dataset.status;
+
+        // Gán vào form
+        document.getElementById(('edit-id')).value = id;
+        document.getElementById('nameField').value = name;
+        document.getElementById('typeField').value = type;
+        document.getElementById('priceField').value = price;
+        document.getElementById('statusField').value = status;
+
+        document.getElementById("editModal").style.display = "block";
+        document.getElementById("editModalOverlay").style.display = "block";
+    }
+
+    function closeEditModal() {
+        document.getElementById("editModal").style.display = "none";
+        document.getElementById("editModalOverlay").style.display = "none";
+    }
+</script>
+</body>
+</html>

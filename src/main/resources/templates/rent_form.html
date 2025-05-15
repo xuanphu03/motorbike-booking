@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Xe Máy | BikeRental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #e74c3c;
+            --secondary-dark: #c0392b;
+            --accent: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --gray: #95a5a6;
+            --success: #2ecc71;
+            --success-dark: #27ae60;
+            --border-radius: 10px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: #f5f9fc;
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background-attachment: fixed;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 3rem 1rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Page Title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--dark);
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .page-title:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Booking Form */
+        .booking-container {
+            display: flex;
+            width: 100%;
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .booking-image {
+            flex: 1;
+            background-image: url('https://via.placeholder.com/600x800?text=Motorcycle+Rental');
+            background-size: cover;
+            background-position: center;
+            min-height: 500px;
+            position: relative;
+        }
+
+        .booking-image:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.3));
+        }
+
+        .image-content {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            color: white;
+            max-width: 80%;
+        }
+
+        .image-content h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .image-content p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .image-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .image-feature {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .image-feature i {
+            margin-right: 5px;
+        }
+
+        .booking-form {
+            flex: 1;
+            padding: 3rem;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--dark);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .form-title:after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary);
+            bottom: 0;
+            left: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: #f8f9fa;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .input-icon {
+            position: relative;
+        }
+
+        .input-icon i {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 15px;
+            color: var(--gray);
+        }
+
+        .input-icon .form-control {
+            padding-left: 40px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .radio-option input {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-group input {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+            margin-top: 1rem;
+            font-size: 1rem;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .form-note {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links li {
+            margin: 0 1rem;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .booking-container {
+                flex-direction: column;
+            }
+
+            .booking-image {
+                min-height: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-links {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+
+            .nav-links li {
+                margin: 0 0.7rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .booking-form {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .booking-form {
+                padding: 1.5rem;
+            }
+
+            .image-content {
+                left: 20px;
+                bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-container">
+        <a href="#" class="logo">
+            <i class="fas fa-motorcycle"></i>
+            BikeRental
+        </a>
+        <ul class="nav-links">
+            <li><a href="#">Trang Chủ</a></li>
+            <li><a href="#">Xe Máy</a></li>
+            <li><a href="#">Dịch Vụ</a></li>
+            <li><a href="#">Liên Hệ</a></li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <h1 class="page-title">Đặt Xe Máy</h1>
+
+        <div class="booking-container">
+            <div class="booking-image" th:style="'background-image: url(' + ${bike.imageUrl} + ')'">
+                <div class="image-content">
+                    <h2 th:text="${bike.name}">Honda SH 150i</h2>
+                    <div class="image-features">
+                        <span class="image-feature"><i class="fas fa-bolt"></i> Tốc độ</span>
+                        <span class="image-feature"><i class="fas fa-gas-pump"></i> Tiết kiệm xăng</span>
+                    </div>
+                </div>
+            </div>
+            <div class="booking-form">
+                <h2 class="form-title">Thông Tin Đặt Xe</h2>
+
+                <form th:action="@{/rent/submit}" th:object="${rentalOrder}" method="post">
+                    <input type="hidden" th:field="*{motorbike.id}" />
+                    <div class="form-group">
+                        <label for="fullname">Họ và tên</label>
+                        <div class="input-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" th:field="*{customerName}" id="fullname" name="fullname" class="form-control" placeholder="Nhập họ và tên của bạn" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Số điện thoại</label>
+                            <div class="input-icon">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel"  th:field="*{phone}" id="phone" name="phone" class="form-control" placeholder="Nhập số điện thoại" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pickup-date">Ngày nhận xe</label>
+                            <div class="input-icon">
+                                <i class="fas fa-calendar"></i>
+                                <input type="date" th:field="*{rentDate}" id="pickup-date" name="pickup-date" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="range-date">Số ngày thuê</label>
+                            <div class="input-icon">
+                                <input type="tel"  th:field="*{rentalDays}" id="range-date" name="phone" class="form-control" placeholder="Nhập số ngày bạn muốn thuê">
+                            </div>
+                        </div>
+                    </div>
+
+<!--                    Nghỉ giải lao   -->
+                    <div class="form-group">
+                        <label for="location">Địa điểm nhận xe</label>
+                        <div class="input-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <input type="text" th:field="*{place}" id="location" name="location" class="form-control" placeholder="Nhập địa chỉ nhận xe" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phương thức thanh toán</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio"  th:field="*{payType}" name="payment" value="cash" checked>
+                                Tiền mặt
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" th:field="*{payType}" name="payment" value="bank-transfer">
+                                Chuyển khoản
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" th:field="*{payType}" name="payment" value="momo">
+                                Ví MoMo
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="note">Ghi chú</label>
+                        <textarea id="note" name="note" class="form-control" rows="3" placeholder="Nhập yêu cầu đặc biệt nếu có"></textarea>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">Tôi đồng ý với <a href="#" style="color: var(--primary);">điều khoản và điều kiện</a> của BikeRental</label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-check-circle"></i> Xác Nhận Đặt Xe
+                    </button>
+
+                    <p class="form-note">Bạn sẽ nhận được xác nhận qua SMS và email sau khi đặt xe thành công</p>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-container">
+        <ul class="footer-links">
+            <li><a href="#">Trang Chủ</a></li>
+            <li><a href="#">Xe Máy</a></li>
+            <li><a href="#">Dịch Vụ</a></li>
+            <li><a href="#">Điều Khoản</a></li>
+            <li><a href="#">Chính Sách Bảo Mật</a></li>
+            <li><a href="#">Liên Hệ</a></li>
+        </ul>
+
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+
+        <p class="copyright">&copy; 2025 BikeRental. Tất cả quyền được bảo lưu.</p>
+    </div>
+</footer>
+</body>
+</html>
+
